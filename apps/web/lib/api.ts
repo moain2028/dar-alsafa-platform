@@ -1,6 +1,6 @@
 import type { User } from './types';
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 export const getToken = () => typeof window === 'undefined' ? null : localStorage.getItem('dar_token');
 export const getUser = (): User|null => { if (typeof window === 'undefined') return null; try { return JSON.parse(localStorage.getItem('dar_user') || 'null'); } catch { return null; } };
 export function saveSession(token:string,user:User) { localStorage.setItem('dar_token',token); localStorage.setItem('dar_user',JSON.stringify(user)); }
