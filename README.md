@@ -74,7 +74,9 @@ npm run build
 
 ## Flutter
 
-يتطلب Flutter 3.22+ (غير مثبت في بيئة بناء هذا المستودع، لذلك لم يُختبر بناء التطبيقين هنا):
+**برومبت تنفيذي جاهز للنسخ لبناء التطبيقين واختبارهما:** [`docs/FLUTTER_PRODUCTION_PROMPT.md`](docs/FLUTTER_PRODUCTION_PROMPT.md). يستهدف Flutter Stable 3.47.9 وDart 3.13.7 وفق بيانات الإصدار الرسمية بتاريخ 2026-11-09.
+
+يوصى بـFlutter Stable 3.47.9 (غير مثبت في بيئة بناء هذا المستودع، لذلك لم يُختبر بناء التطبيقين هنا):
 
 ```bash
 cd apps/customer_mobile
