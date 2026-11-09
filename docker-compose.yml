@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: dar_alsafa
+      POSTGRES_USER: dar_alsafa
+      POSTGRES_PASSWORD: local-compose-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./deploy/postgres/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dar_alsafa"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redis_data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.api
+    environment:
+      NODE_ENV: production
+      API_PORT: 3001
+      JWT_SECRET: change-this-compose-secret-before-any-shared-use
+      DATABASE_URL: postgresql://dar_alsafa:local-compose-password@postgres:5432/dar_alsafa
+      REDIS_URL: redis://redis:6379
+      DB_SYNCHRONIZE: "false"
+      SEED_DEMO: "true"
+      ZATCA_MODE: development
+      ZATCA_SELLER_NAME: مطاعم دار الصفاء
+      ZATCA_VAT_NUMBER: "310123456700003"
+      ZATCA_PREVIOUS_HASH: NWZlY2E2YjM4OTU1NTljNzM5OTQxZDI5ZTY3YjNkNmYyN2Y4YzdlZDU3ZTdjMDNjMTM4NzY3YzRhN2QwNjA4YjI=
+      WEB_ORIGIN: http://localhost:3000
+    ports: ["3001:3001"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+  web:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api
+    ports: ["3000:3000"]
+    depends_on: [api]
+volumes:
+  postgres_data:
+  redis_data:

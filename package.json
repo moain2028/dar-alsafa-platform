@@ -1,0 +1,21 @@
+{
+  "name": "dar-alsafa-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "منظومة دار الصفاء المؤسسية الموحدة للمطاعم والضيافة والتوصيل ونقاط البيع",
+  "workspaces": ["apps/api", "apps/web"],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,green \"npm run start:dev -w @dar-alsafa/api\" \"npm run dev -w @dar-alsafa/web\"",
+    "build": "npm run build -w @dar-alsafa/api && npm run build -w @dar-alsafa/web",
+    "test": "npm run test -w @dar-alsafa/api",
+    "lint": "npm run lint -w @dar-alsafa/api && npm run lint -w @dar-alsafa/web",
+    "typecheck": "npm run typecheck -w @dar-alsafa/api && npm run typecheck -w @dar-alsafa/web",
+    "format": "prettier --write \"apps/**/*.{ts,tsx,js,json,css,md}\"",
+    "seed": "npm run seed -w @dar-alsafa/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.5.3"
+  },
+  "engines": { "node": ">=20.11.0" }
+}
